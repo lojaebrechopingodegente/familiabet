@@ -190,22 +190,15 @@
       const SENHA_CORRETA = 'familiabet2026';
 
       function validarSenha() {
-        console.log('[LOGIN] Botão clicado');
-
         var input = document.getElementById('senha');
         var erroMsg = document.getElementById('erroMsg');
         var senhaDigitada = input.value.trim();
 
-        console.log('[LOGIN] Senha digitada:', senhaDigitada);
-        console.log('[LOGIN] Senha esperada:', SENHA_CORRETA);
-        console.log('[LOGIN] Comparação:', senhaDigitada === SENHA_CORRETA);
-
         if (senhaDigitada === SENHA_CORRETA) {
-          console.log('[LOGIN] Senha correta! Redirecionando...');
           sessionStorage.setItem('familiabet_auth', 'true');
-          window.location.href = './index.html';
+          // Redireciona para o app React dentro da pasta assets
+          window.location.href = './assets/index.html';
         } else {
-          console.log('[LOGIN] Senha incorreta');
           input.classList.add('erro');
           erroMsg.classList.add('visible');
           input.value = '';
@@ -217,18 +210,13 @@
         }
       }
 
-      // Aguarda DOM carregar
       document.addEventListener('DOMContentLoaded', function() {
-        console.log('[LOGIN] DOM carregado');
-
         var btn = document.getElementById('btnEntrar');
         var input = document.getElementById('senha');
+        var erroMsg = document.getElementById('erroMsg');
 
         if (btn) {
           btn.addEventListener('click', validarSenha);
-          console.log('[LOGIN] Evento click adicionado ao botão');
-        } else {
-          console.error('[LOGIN] Botão não encontrado!');
         }
 
         if (input) {
