@@ -194,10 +194,9 @@
       const senhaDigitada = input.value.trim();
 
       if (senhaDigitada === SENHA_CORRETA) {
-        // Salva flag de autenticação
         sessionStorage.setItem('familiabet_auth', 'true');
-        // Redireciona para o app
-        window.location.href = './app.html';
+        // Redireciona para o app React na pasta assets
+        window.location.href = './assets/index.html';
       } else {
         input.classList.add('erro');
         erroMsg.classList.add('visible');
@@ -212,14 +211,12 @@
       return false;
     }
 
-    // Enter no campo de senha também submete
     document.getElementById('senha').addEventListener('keypress', function(e) {
       if (e.key === 'Enter') {
         validarSenha(e);
       }
     });
 
-    // Limpa erro ao digitar
     document.getElementById('senha').addEventListener('input', function() {
       document.getElementById('erroMsg').classList.remove('visible');
     });
