@@ -1,14 +1,310 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Familia Bet</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>❤️</text></svg>" />
-    <script type="module" crossorigin src="/assets/index-CzAGHX7V.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-DTethOsK.css">
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Família Bet - Login</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            padding: 20px;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .brasao-container {
+            margin-bottom: 25px;
+        }
+
+        .brasao-container img {
+            width: 140px;
+            height: 140px;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.25));
+            border-radius: 12px;
+        }
+
+        h1 {
+            color: #1a1a2e;
+            font-size: 28px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            color: #333;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        input[type="password"],
+        input[type="text"] {
+            width: 100%;
+            padding: 14px 50px 14px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        input[type="password"]:focus,
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #0f3460;
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(15, 52, 96, 0.1);
+        }
+
+        .btn-olho {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            transition: color 0.2s ease;
+            z-index: 2;
+        }
+
+        .btn-olho:hover {
+            color: #0f3460;
+        }
+
+        .btn-olho svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .btn-entrar {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #0f3460 0%, #1a1a2e 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-entrar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(15, 52, 96, 0.4);
+        }
+
+        .btn-entrar:active {
+            transform: translateY(0);
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 15px;
+            display: none;
+            padding: 10px;
+            background: rgba(231, 76, 60, 0.1);
+            border-radius: 8px;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .footer {
+            margin-top: 25px;
+            color: #999;
+            font-size: 12px;
+        }
+
+        .loading {
+            display: none;
+        }
+
+        .loading.show {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #fff;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+<base target="_blank">
+</head>
+<body>
+    <div class="login-container">
+        <div class="brasao-container">
+            <img src="brasao-web.png" alt="Brasão Família Bet">
+        </div>
+
+        <h1>Família Bet</h1>
+        <p class="subtitle">Sistema de Controle Familiar</p>
+
+        <form id="loginForm" onsubmit="return fazerLogin(event)">
+            <div class="form-group">
+                <label for="senha">Senha de Acesso</label>
+                <div class="input-wrapper">
+                    <input 
+                        type="password" 
+                        id="senha" 
+                        placeholder="Digite a senha..."
+                        autocomplete="off"
+                        required
+                    >
+                    <button type="button" class="btn-olho" id="btnOlho" onclick="toggleSenha()" title="Mostrar/Ocultar senha">
+                        <!-- Ícone olho fechado (senha oculta) -->
+                        <svg id="iconeOlho" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-entrar" id="btnEntrar">
+                <span class="loading" id="loading"></span>
+                Entrar no Sistema
+            </button>
+        </form>
+
+        <div class="error-message" id="errorMessage">
+            Senha incorreta. Tente novamente.
+        </div>
+
+        <div class="footer">
+            © 2026 Família Bet - Todos os direitos reservados
+        </div>
+    </div>
+
+    <script>
+        const SENHA_CORRETA = 'FamiliaBet2026';
+
+        // Ícones SVG
+        const olhoAberto = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+        </svg>`;
+
+        const olhoFechado = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
+            <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path>
+            <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7c.78 0 1.53-.09 2.24-.26"></path>
+            <path d="M2 2l20 20"></path>
+        </svg>`;
+
+        let senhaVisivel = false;
+
+        function toggleSenha() {
+            const input = document.getElementById('senha');
+            const icone = document.getElementById('iconeOlho');
+
+            senhaVisivel = !senhaVisivel;
+
+            if (senhaVisivel) {
+                input.type = 'text';
+                icone.innerHTML = olhoFechado;
+            } else {
+                input.type = 'password';
+                icone.innerHTML = olhoAberto;
+            }
+        }
+
+        function fazerLogin(event) {
+            event.preventDefault();
+
+            const senha = document.getElementById('senha').value;
+            const btn = document.getElementById('btnEntrar');
+            const loading = document.getElementById('loading');
+            const errorMsg = document.getElementById('errorMessage');
+
+            // Mostrar loading
+            btn.disabled = true;
+            loading.classList.add('show');
+            errorMsg.classList.remove('show');
+
+            setTimeout(() => {
+                if (senha === SENHA_CORRETA) {
+                    localStorage.setItem('cuidado_authenticated', 'true');
+                    localStorage.setItem('familiabet_login_time', Date.now().toString());
+                    window.location.href = 'app.html';
+                } else {
+                    btn.disabled = false;
+                    loading.classList.remove('show');
+                    errorMsg.classList.add('show');
+                    document.getElementById('senha').value = '';
+                    document.getElementById('senha').focus();
+                }
+            }, 500);
+        }
+
+        // Verificar se já está logado
+        if (localStorage.getItem('cuidado_authenticated') === 'true') {
+            window.location.href = 'app.html';
+        }
+
+        // Permitir Enter no input
+        document.getElementById('senha').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                fazerLogin(e);
+            }
+        });
+    </script>
+</body>
 </html>
