@@ -33,12 +33,24 @@
     </div>
     <div id="root"></div>
     <script>
-        // Integra a Agenda V2 sem modificar os demais módulos ou o login existente.
+        // Redireciona apenas o item lateral "Agenda de Eventos" para a Agenda V2.
+        // A navegação do aplicativo e os demais módulos permanecem intactos.
         document.addEventListener('click', function(event) {
-            const target = event.target instanceof Element ? event.target : null;
-            if (!target) return;
-            const menuItem = target.closest('aside a, aside button, nav a, nav button, [role="navigation"] a, [role="navigation"] button, aside [role="button"], nav [role="button"]');
-            if (!menuItem || !menuItem.textContent || menuItem.textContent.trim() !== 'Agenda de Eventos') return;
+            const clicked = event.target instanceof Element ? event.target : null;
+            if (!clicked) return;
+            let node = clicked;
+            let menuLabel = null;
+            while (node && node !== document.body) {
+                if (node.textContent && node.textContent.trim() === 'Agenda de Eventos') {
+                    menuLabel = node;
+                    break;
+                }
+                node = node.parentElement;
+            }
+            if (!menuLabel) return;
+            const rect = menuLabel.getBoundingClientRect();
+            // O item do menu fica na coluna lateral; não interceptar o título da página.
+            if (rect.left >= 280 || rect.width > 280) return;
             event.preventDefault();
             event.stopPropagation();
             event.stopImmediatePropagation();
