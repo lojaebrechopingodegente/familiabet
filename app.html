@@ -84,6 +84,26 @@
           if(!frame.src)frame.src=frame.dataset.url;
           panel.classList.add('open');
         },true);
+        // Quando outro módulo é selecionado, oculta a Agenda V2 e deixa
+        // o clique seguir normalmente para o roteador original do sistema.
+        document.addEventListener('click',function(event){
+          const panel=document.getElementById('agenda-v2-embedded');
+          if(!panel || !panel.classList.contains('open')) return;
+          const target=event.target instanceof Element ? event.target : null;
+          if(!target || target.closest('#agenda-v2-embedded')) return;
+          const sidebar=target.closest('aside, nav, [role="navigation"]');
+          if(!sidebar) return;
+          let node=target, agendaClicked=false;
+          while(node && node!==sidebar.parentElement){
+            if(node.textContent && node.textContent.trim()==='Agenda de Eventos'){
+              const rect=node.getBoundingClientRect();
+              if(rect.left<280 && rect.width<=280) agendaClicked=true;
+              break;
+            }
+            node=node.parentElement;
+          }
+          if(!agendaClicked) panel.classList.remove('open');
+        },true);
       })();
     </script>
     <script type="module" crossorigin src="./assets/index-8QbyIBO3.js"></script>
