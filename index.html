@@ -32,30 +32,59 @@
         <div class="loading-spinner"></div>
     </div>
     <div id="root"></div>
+    <style>
+      #agenda-v2-embedded { position:fixed; top:65px; left:260px; right:0; bottom:0; z-index:30; background:#f4f6fb; display:none; }
+      #agenda-v2-embedded.open { display:flex; flex-direction:column; }
+      #agenda-v2-embedded .agenda-v2-toolbar { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:8px 16px; background:#fff; border-bottom:1px solid #e3e8f1; font:600 14px system-ui,sans-serif; color:#1e335c; }
+      #agenda-v2-embedded .agenda-v2-toolbar button { border:0; background:#e8edf9; border-radius:7px; padding:7px 12px; cursor:pointer; color:#243d72; font-weight:600; }
+      #agenda-v2-embedded iframe { flex:1; width:100%; border:0; background:#f4f6fb; }
+      @media(max-width:700px) { #agenda-v2-embedded { left:0; top:65px; } }
+    </style>
     <script>
-        // Redireciona apenas o item lateral "Agenda de Eventos" para a Agenda V2.
-        // A navegação do aplicativo e os demais módulos permanecem intactos.
-        document.addEventListener('click', function(event) {
-            const clicked = event.target instanceof Element ? event.target : null;
-            if (!clicked) return;
-            let node = clicked;
-            let menuLabel = null;
-            while (node && node !== document.body) {
-                if (node.textContent && node.textContent.trim() === 'Agenda de Eventos') {
-                    menuLabel = node;
-                    break;
-                }
-                node = node.parentElement;
-            }
-            if (!menuLabel) return;
-            const rect = menuLabel.getBoundingClientRect();
-            // O item do menu fica na coluna lateral; não interceptar o título da página.
-            if (rect.left >= 280 || rect.width > 280) return;
-            event.preventDefault();
-            event.stopPropagation();
-            event.stopImmediatePropagation();
-            window.location.assign('/familiabet/agenda-v2/');
-        }, true);
+      // Agenda V2 incorporada no painel; nenhuma alteração no login ou nos outros módulos.
+      (function() {
+        function ensureAgenda() {
+          let panel=document.getElementById('agenda-v2-embedded');
+          if(panel) return panel;
+          panel=document.createElement('section');
+          panel.id='agenda-v2-embedded';
+          panel.setAttribute('aria-label','Agenda de Eventos V2');
+          const toolbar=document.createElement('div');
+          toolbar.className='agenda-v2-toolbar';
+          const title=document.createElement('span');
+          title.textContent='Agenda de Eventos';
+          const close=document.createElement('button');
+          close.type='button';
+          close.textContent='Fechar agenda';
+          close.onclick=function(){panel.classList.remove('open')};
+          toolbar.append(title,close);
+          const frame=document.createElement('iframe');
+          frame.title='Agenda de Eventos V2';
+          frame.loading='eager';
+          frame.dataset.url='/familiabet/agenda-v2/';
+          panel.append(toolbar,frame);
+          document.body.append(panel);
+          return panel;
+        }
+        document.addEventListener('click',function(event){
+          const clicked=event.target instanceof Element ? event.target : null;
+          if(!clicked) return;
+          let node=clicked, menuLabel=null;
+          while(node && node!==document.body){
+            if(node.textContent && node.textContent.trim()==='Agenda de Eventos'){menuLabel=node;break}
+            node=node.parentElement;
+          }
+          if(!menuLabel || menuLabel.closest('#agenda-v2-embedded')) return;
+          const rect=menuLabel.getBoundingClientRect();
+          if(rect.left>=280 || rect.width>280) return;
+          event.preventDefault();
+          event.stopPropagation();
+          event.stopImmediatePropagation();
+          const panel=ensureAgenda(),frame=panel.querySelector('iframe');
+          if(!frame.src)frame.src=frame.dataset.url;
+          panel.classList.add('open');
+        },true);
+      })();
     </script>
     <script type="module" crossorigin src="./assets/index-8QbyIBO3.js"></script>
     <script>
